@@ -4,16 +4,16 @@ export default function ProfileContent() {
       {/* Short preview for mobile */}
       <p className="sm:hidden">
         Hi, I’m Zulfa! I’m a{' '}
-        <span className="text-[#ff004d]">mobile app developer</span> based in{' '}
-        <span className="text-[#ff004d]">Bandung</span>.
+        <span className="text-yellow-400">mobile app developer</span> based in{' '}
+        <span className="text-yellow-400">Bandung</span>.
       </p>
 
       {/* Full first paragraph for sm and up */}
       <p className="hidden sm:block">
         Hi, I’m Zulfa! I’m a{' '}
-        <span className="text-[#ff004d]">mobile app developer</span> passionate about
+        <span className="text-yellow-400">mobile app developer</span> passionate about
         building intuitive and impactful digital experiences. Based in{' '}
-        <span className="text-[#ff004d]">Bandung, Indonesia</span>, I specialize in
+        <span className="text-yellow-400">Bandung, Indonesia</span>, I specialize in
         developing applications with clean architecture. With a
         background in Informatics, I love turning ideas into reliable,
         user-friendly products.
