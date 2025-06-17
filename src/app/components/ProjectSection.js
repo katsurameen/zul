@@ -8,25 +8,25 @@ const projects = [
   {
     id: 1,
     title: "Palm Tree Health Detection",
-    image: "/images/project/project1.jpg",
+    image: "/Images/project1.jpg",
     description: "Detecting palm tree health using Mask R-CNN and NDVI in aerial imagery.",
   },
   {
     id: 2,
     title: "ORLINK",
-    image: "/images/project/project2.jpg",
+    image: "/Images/project2.jpg",
     description: "A Website for subscribe to the internet in residential areas.",
   },
   {
     id: 3,
     title: "E-GEOS Mobile",
-    image: "/images/project/project3.jpg",
+    image: "/Images/project3.jpg",
     description: "A mobile app for uploading and processing data aerial from field.",
   },
   {
     id: 4,
     title: "Spicetify",
-    image: "/images/project/project4.jpg",
+    image: "/Images/project4.jpg",
     description: "A Website for gathering statistic from your daily spotify.",
   },
 ];
