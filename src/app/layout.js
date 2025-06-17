@@ -21,8 +21,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: 'Profile Page',
-  description: 'Zulfa personal portfolio profile',
+  title: 'Zumawahib',
+  description: 'Portfolio website',
 };
 
 export default function RootLayout({ children }) {
