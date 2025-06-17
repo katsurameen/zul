@@ -10,7 +10,7 @@ export default function ProfileSection() {
       initial={{ opacity: 0, y: 50 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className="flex flex-col pt-50 lg:flex-row lg:justify-between lg:items-start gap-10 max-w-7xl mx-auto snap-start min-h-screen items-center justify-center px-6"
+      className="flex flex-col-reverse lg:flex-row lg:pt-50 items-center lg:items-start justify-center gap-10 px-4 sm:px-6 md:px-8 lg:px-12 max-w-7xl mx-auto snap-start min-h-screen pt-20"
     >
       <ProfileContent />
       <ProfileImageLinks />

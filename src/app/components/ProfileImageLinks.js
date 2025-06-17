@@ -6,34 +6,28 @@ const socialLinks = [
 
 export default function ProfileImageLinks() {
   return (
-    <section className="flex flex-col items-center space-y-6 sm:space-y-8 w-full sm:w-auto">
+    <section className="flex flex-col items-center space-y-6 w-full sm:w-auto">
       <img
         src="/Images/zul.jpg"
         alt="Profile"
-        className="w-48 h-48 object-cover rounded"
+        className="w-36 h-36 sm:w-48 sm:h-48 object-cover rounded"
       />
-      <div className="flex flex-col space-y-4 text-lg w-full max-w-xs sm:max-w-none text-white">
+
+      <div className="flex flex-col items-center space-y-3 text-lg text-white w-full max-w-xs">
         {socialLinks.map((item) => (
-            <a
+          <a
             key={item.name}
             href={item.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="underline text-center sm:text-left block"
-            >
-            {item.name}
-            </a>
+            className="underline text-center hover:text-red-400 transition"
+          >
+            {item.name}s
+          </a>
         ))}
-        </div>
-        <div className="flex justify-center pt-6">
-            <a
-            href="/Files/CV Zulfa.pdf"
-            download
-            className="bg-[#ff004d] text-white text-sm px-6 py-3 border-4 border-white rounded-sm hover:bg-[#ff3366] transition-all duration-200 font-pixel"
-            >
-            Download CV
-            </a>
-        </div>
-        </section>
+      </div>
+
+      
+    </section>
   );
 }

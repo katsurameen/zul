@@ -1,4 +1,5 @@
-"use client";
+"use client"
+import { useEffect, useState } from 'react';
 import ProjectSection from './components/ProjectSection';
 import WorkSection from './components/WorkSection';
 import ProfileSection from './components/ProfileSection';
@@ -6,7 +7,6 @@ import ContactSection from './components/ContactSection';
 import Header from './components/Header';
 import MobileMenu from './components/MobileMenu';
 import useActiveSection from '@/hooks/useActiveSection';
-import { useState } from 'react';
 
 export default function HomePage() {
   const activeSection = useActiveSection([
@@ -17,9 +17,20 @@ export default function HomePage() {
   ]);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  useEffect(() => {
+    const el = document.getElementById("profile");
+    if (el) {
+      el.scrollIntoView({ behavior: "auto" });
+    }
+  }, []);
+
   return (
     <main className="snap-y snap-mandatory overflow-y-scroll h-screen scroll-hide">
-      <Header activeSection={activeSection} onMenuOpen={() => setIsMenuOpen(true)} />
+      <Header 
+        activeSection={activeSection} 
+        onMenuOpen={() => setIsMenuOpen(true)} 
+        isMenuOpen={isMenuOpen}
+      />
       <MobileMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
 
       <section id="profile" className="snap-start min-h-screen">
