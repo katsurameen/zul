@@ -23,7 +23,11 @@ const geistMono = Geist_Mono({
 export const metadata = {
   title: 'Zumawahib',
   description: 'Portfolio website',
+  icons: {
+    icon: '/favicon.ico', 
+  },
 };
+
 
 export default function RootLayout({ children }) {
   return (
