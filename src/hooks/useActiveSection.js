@@ -1,22 +1,26 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
-export default function useActiveSection(sectionIds) {
-  const [activeSection, setActiveSection] = useState("profile"); 
+export default function useActiveSection(sectionIds, rootRef) {
+  const [activeSection, setActiveSection] = useState("profile");
+  const visibleRef = useRef({});
 
   useEffect(() => {
     const observerOptions = {
-      root: null,
-      rootMargin: "0px",
-      threshold: 0.5, 
+      root: rootRef?.current ?? null,
+      rootMargin: "-20% 0px -60% 0px",
+      threshold: 0,
     };
 
     const observer = new IntersectionObserver((entries) => {
       for (const entry of entries) {
-        if (entry.isIntersecting) {
-          setActiveSection(entry.target.id);
-          break; 
-        }
+        visibleRef.current[entry.target.id] = entry.isIntersecting;
+      }
+      // Pick the deepest visible section in document order so a shared
+      // boundary never resolves to the section above (e.g. Work over Projects).
+      const visible = sectionIds.filter((id) => visibleRef.current[id]);
+      if (visible.length > 0) {
+        setActiveSection(visible[visible.length - 1]);
       }
     }, observerOptions);
 

@@ -1,5 +1,5 @@
 "use client"
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import ProjectSection from './components/ProjectSection';
 import WorkSection from './components/WorkSection';
 import ProfileSection from './components/ProfileSection';
@@ -9,12 +9,16 @@ import MobileMenu from './components/MobileMenu';
 import useActiveSection from '@/hooks/useActiveSection';
 
 export default function HomePage() {
-  const activeSection = useActiveSection([
-    "profile",
-    "work",
-    "projects",
-    "contact",
-  ]);
+  const scrollRef = useRef(null);
+  const activeSection = useActiveSection(
+    [
+      "profile",
+      "work",
+      "projects",
+      "contact",
+    ],
+    scrollRef
+  );
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -25,24 +29,24 @@ export default function HomePage() {
   }, []);
 
   return (
-    <main className="snap-y snap-mandatory overflow-y-scroll h-screen scroll-hide">
+    <main ref={scrollRef} className={`flex-1 min-h-0 overflow-x-hidden overscroll-contain scroll-hide scroll-pt-24 sm:snap-y sm:snap-proximity ${isMenuOpen ? "overflow-hidden" : "overflow-y-scroll"}`}>
       <Header 
         activeSection={activeSection} 
         onMenuOpen={() => setIsMenuOpen(true)} 
         isMenuOpen={isMenuOpen}
       />
-      <MobileMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+      <MobileMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} activeSection={activeSection} />
 
-      <section id="profile" className="snap-start min-h-screen">
+      <section id="profile" className="sm:snap-start sm:min-h-screen">
         <ProfileSection />
       </section>
-      <section id="work" className="snap-start min-h-screen">
+      <section id="work" className="sm:snap-start sm:min-h-screen">
         <WorkSection />
       </section>
-      <section id="projects" className="snap-start min-h-screen">
+      <section id="projects" className="sm:snap-start sm:min-h-screen">
         <ProjectSection />
       </section>
-      <section id="contact" className="snap-start min-h-screen">
+      <section id="contact" className="sm:snap-start sm:min-h-screen">
         <ContactSection />
       </section>
     </main>

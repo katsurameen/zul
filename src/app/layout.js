@@ -33,7 +33,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`${pressStart.variable} bg-[#222] text-white min-h-screen p-6 sm:p-8`}
+        className={`${pressStart.variable} bg-[#222] text-white min-h-screen p-3 sm:p-8`}
       >
         <LayoutShell>
           {children}
