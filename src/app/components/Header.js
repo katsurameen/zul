@@ -1,74 +1,66 @@
-import Image from "next/image";
-
 export default function Header({ activeSection, onMenuOpen, isMenuOpen }) {
   const sections = [
-    { name: "Profile", id: "profile" },
     { name: "Work", id: "work" },
     { name: "Projects", id: "projects" },
     { name: "Contact", id: "contact" },
   ];
 
+  const scrollTo = (e, id) => {
+    e.preventDefault();
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
-    <header className="sticky top-0 z-50 pt-3 sm:pt-8 max-w-7xl mx-auto px-1 sm:px-6">
-      <div className="pixel-panel-sm flex items-center justify-between bg-[#1a1a1a] border-2 border-neutral-700 px-3 sm:px-6 py-2 sm:py-3">
-      {/* Logo (compact on mobile, full on desktop) */}
-      <div className="flex items-center gap-3">
-        <Image
-          src="/Images/zel.png"
-          alt="White pixel style letter Z logo"
-          width={44}
-          height={44}
-          className="w-8 h-8 sm:w-11 sm:h-11"
-        />
-        <span className="text-[10px] text-neutral-400 hidden lg:inline">ZUMA.WAHIB</span>
-      </div>
-
-      {/* Desktop Nav */}
-      <nav className="hidden sm:flex items-center gap-2 text-[11px]">
-        {sections.map(({ name, id }, i) => (
-          <a
-            key={id}
-            href={`#${id}`}
-            onClick={(e) => {
-              e.preventDefault();
-              const el = document.getElementById(id);
-              if (el) el.scrollIntoView({ behavior: "smooth" });
-            }}
-            className={`px-3 py-2 border-2 transition ${
-              activeSection === id
-                ? "bg-yellow-400 text-black border-yellow-400"
-                : "text-neutral-300 border-transparent hover:border-neutral-600 hover:text-white"
-            }`}
-          >
-            <span className="text-neutral-500 mr-2">0{i + 1}</span>
-            {name}
-          </a>
-        ))}
-      </nav>
-
-      {/* Burger Menu (mobile only, labelled + 44px target) */}
-      {!isMenuOpen && (
-        <button
-          aria-label="Open menu"
-          className="sm:hidden z-30 ml-auto flex items-center gap-2 px-3 min-h-[44px] border-2 border-neutral-700 bg-[#1a1a1a] text-[10px] text-white active:border-yellow-400"
-          onClick={onMenuOpen}
+    <header className="sticky top-0 z-50 bg-[#fffdf5] border-b-[3px] border-black">
+      <div className="max-w-7xl mx-auto px-4 sm:px-8 h-16 sm:h-20 flex items-center justify-between gap-4">
+        <a
+          href="#profile"
+          onClick={(e) => scrollTo(e, "profile")}
+          className="flex items-center gap-3"
+          aria-label="Back to top"
         >
-          MENU
-          <svg
-            className="w-6 h-6 text-white"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            viewBox="0 0 24 24"
+          <span className="flex items-center justify-center w-9 h-9 bg-[#ffd23f] border-[3px] border-black shadow-[3px_3px_0_0_#000] font-display text-lg" aria-hidden="true">
+            Z
+          </span>
+          <span className="font-display text-base sm:text-lg tracking-tight hidden min-[420px]:inline">ZULFA SULTHANY</span>
+        </a>
+
+        <nav className="hidden sm:flex items-center gap-2" aria-label="Primary">
+          {sections.map(({ name, id }) => (
+            <a
+              key={id}
+              href={`#${id}`}
+              aria-current={activeSection === id ? "true" : undefined}
+              onClick={(e) => scrollTo(e, id)}
+              className={`px-4 py-2 font-bold uppercase text-sm tracking-wide border-[3px] transition-all ${
+                activeSection === id
+                  ? "bg-[#ffd23f] border-black shadow-[3px_3px_0_0_#000]"
+                  : "border-transparent hover:border-black hover:bg-white"
+              }`}
+            >
+              {name}
+            </a>
+          ))}
+        </nav>
+
+        <div className="flex items-center gap-2">
+          <a
+            href="/Files/CV Zulfa.pdf"
+            download
+            className="nb-btn nb-btn-yellow hidden sm:inline-flex min-h-[44px] px-5 text-sm uppercase tracking-wide"
           >
-            <path
-              d="M4 6h16M4 12h16M4 18h16"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </button>
-      )}
+            Download CV
+          </a>
+          {!isMenuOpen && (
+            <button
+              aria-label="Open menu"
+              className="sm:hidden px-4 min-h-[44px] font-bold uppercase text-sm bg-white border-[3px] border-black shadow-[3px_3px_0_0_#000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none"
+              onClick={onMenuOpen}
+            >
+              Menu
+            </button>
+          )}
+        </div>
       </div>
     </header>
   );

@@ -1,8 +1,18 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #fffdf5;
+  --foreground: #000000;
+  --nb-yellow: #ffd23f;
+  --nb-pink: #ff90e8;
+  --nb-blue: #74b9ff;
+  --nb-green: #88d498;
+  --nb-red: #ff6b6b;
+  --nb-border: 3px solid #000;
+  --nb-border-thin: 2px solid #000;
+  --nb-shadow-sm: 3px 3px 0 0 #000;
+  --nb-shadow: 5px 5px 0 0 #000;
+  --nb-shadow-lg: 8px 8px 0 0 #000;
 }
 
 html {
@@ -12,90 +22,158 @@ html {
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-sans: var(--font-grotesk);
+  --font-mono: var(--font-spacemono);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: 'Press Start 2P', cursive;
-  height: 100%;
-  overflow: hidden;
+  font-family: var(--font-grotesk), system-ui, sans-serif;
+  min-height: 100dvh;
 }
 
-/* Retro pixel backdrop: subtle dot grid + vignette tied to identity */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  background-image: radial-gradient(rgba(255,255,255,0.07) 1px, transparent 1px);
-  background-size: 24px 24px;
+.font-display {
+  font-family: var(--font-archivo), system-ui, sans-serif;
 }
 
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  background: radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.45) 100%);
+.mono-chip {
+  font-family: var(--font-spacemono), ui-monospace, monospace;
 }
 
 ::selection {
-  background: #facc15;
-  color: #111;
+  background: var(--nb-yellow);
+  color: #000;
 }
 
-/* Hard pixel shadow - single elevation language for the site */
-.pixel-panel {
-  box-shadow: 6px 6px 0 0 #000;
-}
-.pixel-panel-sm {
-  box-shadow: 4px 4px 0 0 #000;
-}
-.pixel-btn {
-  box-shadow: 4px 4px 0 0 #000;
-  transition: transform 120ms ease, box-shadow 120ms ease, background-color 120ms ease;
-}
-.pixel-btn:hover {
-  transform: translate(-1px, -1px);
+/* Canonical brutalist button: 3px border, hard shadow, press physics */
+.nb-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid #000;
+  border-radius: 0;
+  font-weight: 700;
   box-shadow: 5px 5px 0 0 #000;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background-color 0.12s ease;
 }
-.pixel-btn:active {
+.nb-btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 7px 7px 0 0 #000;
+}
+.nb-btn:active {
   transform: translate(3px, 3px);
   box-shadow: 1px 1px 0 0 #000;
 }
-
-/* Hide scrollbar for all browsers */
-.scroll-hide {
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none;  /* IE and Edge */
+.nb-btn-yellow {
+  background: var(--nb-yellow);
+  color: #000;
 }
-.scroll-hide::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera */
-}
-
-/* Mobile tap feedback + smaller hard-shadow register on narrow screens */
-* {
-  -webkit-tap-highlight-color: transparent;
+.nb-btn-white {
+  background: #fff;
+  color: #000;
 }
 
-@media (max-width: 640px) {
-  .pixel-panel {
-    box-shadow: 4px 4px 0 0 #000;
+/* Canonical brutalist card */
+.nb-card {
+  background: #fff;
+  border: 3px solid #000;
+  border-radius: 0;
+  box-shadow: 5px 5px 0 0 #000;
+}
+.nb-card-hover {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.nb-card-hover:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 7px 7px 0 0 #000;
+}
+
+/* Small chips and badges */
+.nb-chip {
+  display: inline-block;
+  border: 2px solid #000;
+  border-radius: 0;
+  box-shadow: 3px 3px 0 0 #000;
+  font-weight: 700;
+}
+
+/* Brutalist inputs */
+.nb-input {
+  width: 100%;
+  background: #fff;
+  border: 3px solid #000;
+  border-radius: 0;
+  padding: 12px 14px;
+  font-size: 16px;
+  color: #000;
+  outline: none;
+  box-shadow: 3px 3px 0 0 #000;
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+.nb-input::placeholder {
+  color: #6b6b6b;
+}
+.nb-input:focus {
+  box-shadow: 5px 5px 0 0 #000;
+  transform: translate(-1px, -1px);
+}
+
+/* Dot-grid texture for the hero (identity motif, not decoration) */
+.nb-dots {
+  background-image: radial-gradient(#000 1.5px, transparent 1.5px);
+  background-size: 22px 22px;
+}
+
+/* Single marquee strip */
+.marquee {
+  overflow: hidden;
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: nb-marquee 26s linear infinite;
+}
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+@keyframes nb-marquee {
+  to {
+    transform: translateX(-50%);
   }
-  .pixel-panel-sm {
-    box-shadow: 3px 3px 0 0 #000;
-  }
 }
 
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid var(--nb-blue);
+  outline-offset: 3px;
+}
+
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 12px;
+  z-index: 100;
+  background: #000;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 10px 14px;
+  border: 3px solid #000;
+  box-shadow: 3px 3px 0 0 var(--nb-yellow);
+  transition: top 150ms ease;
+}
+.skip-link:focus {
+  top: 12px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .marquee-track {
+    animation: none;
+  }
+}

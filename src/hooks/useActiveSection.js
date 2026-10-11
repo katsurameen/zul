@@ -6,8 +6,13 @@ export default function useActiveSection(sectionIds, rootRef) {
   const visibleRef = useRef({});
 
   useEffect(() => {
+    // Use the scroll container as observer root only when it actually
+    // scrolls; otherwise fall back to the viewport (document scroll).
+    const rootEl = rootRef?.current;
+    const root =
+      rootEl && getComputedStyle(rootEl).overflowY !== "visible" ? rootEl : null;
     const observerOptions = {
-      root: rootRef?.current ?? null,
+      root,
       rootMargin: "-20% 0px -60% 0px",
       threshold: 0,
     };

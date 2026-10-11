@@ -1,14 +1,8 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import Script from "next/script";
-
-const socialLinks = [
-  { name: "Instagram", url: "https://instagram.com/zlf_sltn" },
-  { name: "Github", url: "https://github.com/katsurameen" },
-  { name: "LinkedIn", url: "https://linkedin.com/in/zulfasulthany" },
-];
 
 const SITE_KEY = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
 
@@ -21,6 +15,7 @@ export default function ContactSection() {
   const [recaptchaLoaded, setRecaptchaLoaded] = useState(false);
   const recaptchaRef = useRef(null);
   const widgetIdRef = useRef(null);
+  const reduce = useReducedMotion();
 
   const renderWidget = () => {
     if (
@@ -35,7 +30,7 @@ export default function ContactSection() {
     try {
       widgetIdRef.current = window.grecaptcha.render(recaptchaRef.current, {
         sitekey: SITE_KEY,
-        theme: "dark",
+        theme: "light",
         callback: (token) => setCaptchaToken(token),
         "expired-callback": () => setCaptchaToken(""),
         "error-callback": () => setCaptchaToken(""),
@@ -80,7 +75,7 @@ export default function ContactSection() {
       if (!res.ok || !data.success) {
         throw new Error(data.error || "Failed to send message.");
       }
-      setStatus({ type: "success", text: "Message sent successfully!" });
+      setStatus({ type: "success", text: "Message sent. I will reply soon." });
       setName("");
       setEmail("");
       setMessage("");
@@ -92,11 +87,12 @@ export default function ContactSection() {
   };
 
   return (
-    <motion.section
-      initial={{ opacity: 0, y: 50 }}
+    <motion.div
+      initial={reduce ? false : { opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
-      className="flex flex-col justify-start sm:justify-center px-3 sm:px-6 py-12 sm:py-10 text-white max-w-6xl mx-auto scroll-mt-20 sm:min-h-screen"
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+      className="max-w-7xl mx-auto px-4 sm:px-8 py-16 sm:py-24"
     >
       <Script
         src="https://www.google.com/recaptcha/api.js?render=explicit"
@@ -106,63 +102,71 @@ export default function ContactSection() {
           renderWidget();
         }}
       />
-      <p className="text-[9px] sm:text-[10px] tracking-widest text-neutral-400 mb-2 text-center sm:text-left">04 / TRANSMISSION</p>
-      <h2 className="text-lg sm:text-2xl mb-6 sm:mb-8 tracking-widest text-center sm:text-left">
-        CONTACT ME
-      </h2>
+      <div className="mx-auto max-w-3xl">
+        <p className="inline-block nb-chip bg-[#74b9ff] px-3 py-1.5 mono-chip text-[13px] uppercase">
+          Contact
+        </p>
+        <h2 className="mt-5 font-display text-4xl md:text-6xl uppercase tracking-tight text-balance">
+          Send a message.
+        </h2>
+        <p className="mt-4 text-lg leading-relaxed">
+          Have a project in mind or just want to say hi? Fill in the form below.
+        </p>
 
-      <form
-        onSubmit={handleSubmit}
-        className="pixel-panel w-full flex flex-col lg:flex-row gap-0 bg-[#1c1c1c] border-2 border-neutral-700 min-w-0"
-      >
-        <div className="flex-1 p-4 sm:p-6 border-b-2 lg:border-b-0 lg:border-r-2 border-neutral-700 min-w-0">
-          <label className="block mb-3 text-[10px] text-neutral-300">MESSAGE <span className="text-yellow-400">*</span></label>
-          <textarea
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            placeholder="Write your quest here..."
-            required
-            className="w-full h-40 sm:h-56 p-4 bg-[#111] text-white text-[11px] leading-relaxed resize-none outline-none border-2 border-neutral-700 focus:border-yellow-400 placeholder:text-neutral-600"
-          />
-          <p className="mt-3 text-[8px] text-neutral-500">BANDUNG (GMT+7)</p>
-        </div>
-
-        <div className="flex-1 p-4 sm:p-6 space-y-5 min-w-0">
+        <form onSubmit={handleSubmit} className="mt-10 nb-card p-6 sm:p-8 space-y-6">
           <div>
-            <label htmlFor="name" className="block mb-3 text-[10px] text-neutral-300">
-              FULLNAME
+            <label htmlFor="message" className="block mb-2 font-bold uppercase text-sm tracking-wide">
+              Message
             </label>
-            <input
-              id="name"
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+            <textarea
+              id="message"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              placeholder="Write your message here..."
               required
-              className="w-full min-h-[48px] px-4 py-3 text-[11px] text-white outline-none bg-[#111] border-2 border-neutral-700 focus:border-yellow-400 placeholder:text-neutral-600"
-              placeholder="Your name"
+              rows={5}
+              className="nb-input resize-y leading-relaxed"
             />
           </div>
 
-          <div>
-            <label htmlFor="email" className="block mb-3 text-[10px] text-neutral-300">
-              EMAIL
-            </label>
-            <input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="w-full min-h-[48px] px-4 py-3 text-[11px] text-white outline-none bg-[#111] border-2 border-neutral-700 focus:border-yellow-400 placeholder:text-neutral-600"
-              placeholder="you@mail.com"
-            />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div>
+              <label htmlFor="name" className="block mb-2 font-bold uppercase text-sm tracking-wide">
+                Full name
+              </label>
+              <input
+                id="name"
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+                autoComplete="name"
+                className="nb-input"
+                placeholder="Your name"
+              />
+            </div>
+            <div>
+              <label htmlFor="email" className="block mb-2 font-bold uppercase text-sm tracking-wide">
+                Email
+              </label>
+              <input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                autoComplete="email"
+                className="nb-input"
+                placeholder="you@mail.com"
+              />
+            </div>
           </div>
 
           <div>
             {SITE_KEY ? (
               <div ref={recaptchaRef} className="min-h-[78px]" />
             ) : (
-              <p className="text-[10px] text-red-400">
+              <p className="font-bold text-[#b00020]">
                 Missing NEXT_PUBLIC_RECAPTCHA_SITE_KEY in .env.local
               </p>
             )}
@@ -170,7 +174,7 @@ export default function ContactSection() {
               <button
                 type="button"
                 onClick={renderWidget}
-                className="mt-2 text-[10px] text-neutral-400 underline"
+                className="mt-2 font-bold underline"
               >
                 Reload captcha
               </button>
@@ -179,46 +183,28 @@ export default function ContactSection() {
 
           {status.text && (
             <p
-              className={`text-[10px] ${
+              role="status"
+              className={`font-bold ${
                 status.type === "success"
-                  ? "text-green-400"
+                  ? "text-green-800"
                   : status.type === "error"
-                    ? "text-red-400"
-                    : "text-neutral-400"
+                    ? "text-[#b00020]"
+                    : "text-black"
               }`}
             >
               {status.text}
             </p>
           )}
 
-          <div>
-            <button
-              type="submit"
-              disabled={status.type === "loading"}
-              className="pixel-btn w-full min-h-[52px] px-4 py-3.5 bg-[#ff004d] text-white text-[11px] border-2 border-white hover:bg-[#ff3366] active:bg-[#ff3366] disabled:opacity-60"
-            >
-              {status.type === "loading" ? "Sending..." : "Send Message ＞"}
-            </button>
-          </div>
-        </div>
-      </form>
-
-      <div className="mt-4 sm:mt-6 pixel-panel-sm bg-[#1c1c1c] border-2 border-neutral-700 p-4 sm:p-5 min-w-0">
-        <p className="text-[9px] sm:text-[10px] tracking-widest text-neutral-400 mb-4">OR FIND ME ON</p>
-        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
-          {socialLinks.map((item) => (
-            <a
-              key={item.name}
-              href={item.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="pixel-btn flex-1 inline-flex items-center justify-center gap-2 min-h-[48px] px-4 text-[10px] border-2 border-neutral-600 bg-[#1a1a1a] text-white hover:border-yellow-400 hover:text-yellow-400 active:border-yellow-400 transition"
-            >
-              {item.name}
-            </a>
-          ))}
-        </div>
+          <button
+            type="submit"
+            disabled={status.type === "loading"}
+            className="nb-btn nb-btn-yellow w-full min-h-[56px] px-4 text-base uppercase tracking-wide disabled:opacity-60"
+          >
+            {status.type === "loading" ? "Sending..." : "Send message"}
+          </button>
+        </form>
       </div>
-    </motion.section>
+    </motion.div>
   );
 }

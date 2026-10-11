@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 
 
 const projects = [
@@ -11,6 +11,7 @@ const projects = [
     image: "/Images/project1.jpg",
     description: "Detecting palm tree health using Mask R-CNN and NDVI in aerial imagery.",
     tag: "ML / CV",
+    pill: "bg-[#88d498]",
   },
   {
     id: 2,
@@ -18,6 +19,7 @@ const projects = [
     image: "/Images/project2.jpg",
     description: "A website for subscribing to the internet in residential areas.",
     tag: "WEB",
+    pill: "bg-[#74b9ff]",
   },
   {
     id: 3,
@@ -25,6 +27,7 @@ const projects = [
     image: "/Images/project3.jpg",
     description: "A mobile app for uploading and processing aerial data from the field.",
     tag: "MOBILE",
+    pill: "bg-[#ff90e8]",
   },
   {
     id: 4,
@@ -32,67 +35,106 @@ const projects = [
     image: "/Images/project4.jpg",
     description: "A website for gathering stats from your daily Spotify.",
     tag: "WEB",
+    pill: "bg-[#ffd23f]",
   },
 ];
 
-export default function ProjectSection() {
-  const [selectedId, setSelectedId] = useState(null);
-
-  const handleClick = (id) => {
-    setSelectedId((prev) => (prev === id ? null : id));
-  };
+function ExpandableCard({ project, index }) {
+  const [open, setOpen] = useState(false);
+  const reduce = useReducedMotion();
+  const toggle = () => setOpen((v) => !v);
 
   return (
-    <section
-      className="px-3 sm:px-6 py-12 sm:py-10 text-white max-w-6xl mx-auto flex flex-col justify-start sm:justify-center sm:min-h-screen"
+    <motion.div
+      initial={reduce ? false : { opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.3 }}
+      transition={{ duration: 0.45, delay: (index % 2) * 0.08, ease: [0.16, 1, 0.3, 1] }}
+      onClick={toggle}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          toggle();
+        }
+      }}
+      role="button"
+      tabIndex={0}
+      aria-expanded={open}
+      className="nb-card nb-card-hover group cursor-pointer overflow-hidden"
     >
-      <p className="text-[9px] sm:text-[10px] tracking-widest text-neutral-400 mb-2 text-center">03 / SELECTED QUESTS</p>
-      <h2 className="text-lg sm:text-2xl mb-2 tracking-widest text-center">
-        PROJECTS
+      <div className="overflow-hidden border-b-[3px] border-black">
+        <img
+          src={project.image}
+          alt={project.title}
+          loading="lazy"
+          className="w-full h-52 object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+        />
+      </div>
+      <div className="p-5 sm:p-6">
+        <span className={`nb-chip px-2 py-0.5 mono-chip text-xs uppercase ${project.pill}`}>
+          {project.tag}
+        </span>
+        <div className="mt-3 flex items-center justify-between gap-3">
+          <h3 className="font-display text-xl uppercase tracking-tight">{project.title}</h3>
+          <span aria-hidden="true" className="shrink-0 font-display text-2xl transition-transform duration-300 group-hover:translate-x-1">
+            →
+          </span>
+        </div>
+        <AnimatePresence>
+          {open && (
+            <motion.div
+              key={`content-${project.id}`}
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.25 }}
+              className="overflow-hidden"
+            >
+              <p className="mt-3 border-t-[3px] border-black pt-3 leading-relaxed">{project.description}</p>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </motion.div>
+  );
+}
+
+export default function ProjectSection() {
+  const reduce = useReducedMotion();
+
+  return (
+    <motion.div
+      initial={reduce ? false : { opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.15 }}
+      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+      className="max-w-7xl mx-auto px-4 sm:px-8 py-16 sm:py-24"
+    >
+      <p className="inline-block nb-chip bg-[#ff90e8] px-3 py-1.5 mono-chip text-[13px] uppercase">
+        Projects
+      </p>
+      <h2 className="mt-5 font-display text-4xl md:text-6xl uppercase tracking-tight text-balance">
+        Selected projects.
       </h2>
-      <p className="text-[8px] sm:text-[9px] text-neutral-500 text-center mb-6 sm:mb-8">CLICK A CARD TO EXPAND</p>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
+      <p className="mt-4 max-w-[60ch] text-lg leading-relaxed">
+        Real products shipped across web, mobile, and machine learning. Click a card to expand details.
+      </p>
+      <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
         {projects.map((project, i) => (
-          <div
-            key={project.id}
-            onClick={() => handleClick(project.id)}
-            className={`cursor-pointer border-2 transition-all duration-200 pixel-panel-sm min-w-0 active:border-yellow-400 ${
-              selectedId === project.id
-                ? "border-yellow-400 bg-[#1c1c1c]"
-                : "border-neutral-700 bg-[#1c1c1c] hover:border-neutral-500 hover:-translate-y-0.5"
-            }`}
-          >
-            <img
-              src={project.image}
-              alt={project.title}
-              className="w-full h-40 object-cover border-b-2 border-neutral-700"
-            />
-            <div className="p-4">
-              <div className="flex items-center justify-between gap-2 mb-2">
-                <span className="text-[8px] text-neutral-500">0{i + 1}</span>
-                <span className="text-[8px] px-2 py-1 bg-yellow-400 text-black">{project.tag}</span>
-              </div>
-              <h3 className="text-[12px] leading-relaxed">{project.title}</h3>
-
-              <AnimatePresence>
-                {selectedId === project.id && (
-                  <motion.div
-                    key={`content-${project.id}`}
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="overflow-hidden"
-                  >
-                    <p className="text-[10px] leading-loose text-neutral-300 mt-3 pt-3 border-t border-dashed border-neutral-700">{project.description}</p>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-
-          </div>
+          <ExpandableCard key={project.id} project={project} index={i} />
         ))}
       </div>
-    </section>
+      <div className="mt-10">
+        <a
+          href="https://github.com/katsurameen"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="nb-btn nb-btn-white min-h-[52px] px-8 text-base uppercase tracking-wide"
+        >
+          More on GitHub
+          <span aria-hidden="true" className="ml-2">→</span>
+        </a>
+      </div>
+    </motion.div>
   );
 }

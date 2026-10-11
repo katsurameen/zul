@@ -1,30 +1,35 @@
-import { Geist, Geist_Mono } from "next/font/google";
+import { Archivo_Black, Space_Grotesk, Space_Mono } from "next/font/google";
 import "./globals.css";
-import { Press_Start_2P } from 'next/font/google';
 import LayoutShell from "./components/LayoutShell";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const archivo = Archivo_Black({
+  weight: "400",
+  variable: "--font-archivo",
   subsets: ["latin"],
 });
 
-const pressStart = Press_Start_2P({
-  weight: '400',
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-press-start',
+const grotesk = Space_Grotesk({
+  weight: ["400", "500", "700"],
+  variable: "--font-grotesk",
+  subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const spaceMono = Space_Mono({
+  weight: ["400", "700"],
+  variable: "--font-spacemono",
   subsets: ["latin"],
 });
 
 export const metadata = {
-  title: 'Zumawahib',
-  description: 'Portfolio website',
+  title: 'Zulfa Sulthany - Backend Developer',
+  description: 'Portfolio of Zulfa Sulthany, a backend developer based in Bandung, Indonesia. Clean architecture, reliable systems, selected projects.',
+  openGraph: {
+    title: 'Zulfa Sulthany - Backend Developer',
+    description: 'Portfolio of Zulfa Sulthany, a backend developer based in Bandung, Indonesia.',
+    type: 'website',
+  },
   icons: {
-    icon: '/favicon.ico', 
+    icon: '/favicon.ico',
   },
 };
 
@@ -33,7 +38,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`${pressStart.variable} bg-[#222] text-white min-h-screen p-3 sm:p-8`}
+        className={`${archivo.variable} ${grotesk.variable} ${spaceMono.variable} bg-[#fffdf5] text-black antialiased`}
       >
         <LayoutShell>
           {children}
