@@ -16,6 +16,7 @@ const columns = [
       { name: "GitHub", href: "https://github.com/katsurameen" },
       { name: "LinkedIn", href: "https://linkedin.com/in/zulfasulthany" },
       { name: "Instagram", href: "https://instagram.com/zlf_sltn" },
+      { name: "Online CV", href: "https://cv.zumawahib.xyz" },
     ],
   },
   {

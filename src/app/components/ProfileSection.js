@@ -42,18 +42,18 @@ export default function ProfileSection() {
             <p className="mt-6 max-w-[52ch] text-lg sm:text-xl leading-relaxed">
               Hi, I am Zulfa, a backend developer from Bandung who ships clean, dependable software.
             </p>
-            <div className="mt-8 flex flex-wrap items-center gap-4">
+            <div className="mt-8 grid grid-cols-2 gap-3 sm:flex sm:flex-wrap sm:items-center sm:gap-4">
               <a
                 href="#contact"
                 onClick={scrollToContact}
-                className="nb-btn nb-btn-yellow min-h-[56px] px-8 text-base uppercase tracking-wide"
+                className="nb-btn nb-btn-yellow min-h-[52px] sm:min-h-[56px] px-2 sm:px-8 text-sm sm:text-base uppercase tracking-wide whitespace-nowrap"
               >
                 Get in touch
               </a>
               <a
                 href="/Files/CV Zulfa.pdf"
                 download
-                className="nb-btn nb-btn-white min-h-[56px] px-8 text-base uppercase tracking-wide"
+                className="nb-btn nb-btn-white min-h-[52px] sm:min-h-[56px] px-2 sm:px-8 text-sm sm:text-base uppercase tracking-wide whitespace-nowrap"
               >
                 Download CV
               </a>
