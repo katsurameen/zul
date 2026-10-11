@@ -7,6 +7,7 @@ import ContactSection from './components/ContactSection';
 import CtaSection from './components/CtaSection';
 import Header from './components/Header';
 import MobileMenu from './components/MobileMenu';
+import SectionDots from './components/SectionDots';
 import useActiveSection from '@/hooks/useActiveSection';
 
 export default function HomePage() {
@@ -34,6 +35,7 @@ export default function HomePage() {
         isMenuOpen={isMenuOpen}
       />
       <MobileMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} activeSection={activeSection} />
+      {!isMenuOpen && <SectionDots activeSection={activeSection} />}
 
       <section id="profile" className="scroll-mt-20">
         <ProfileSection />
