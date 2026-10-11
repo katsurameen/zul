@@ -27,7 +27,7 @@ export default function HomePage() {
   }, []);
 
   return (
-    <main ref={scrollRef} className="flex-1 w-full overflow-x-hidden">
+    <main ref={scrollRef} className="flex-1 w-full">
       <Header
         activeSection={activeSection}
         onMenuOpen={() => setIsMenuOpen(true)}

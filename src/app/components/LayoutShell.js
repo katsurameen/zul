@@ -63,7 +63,7 @@ export default function LayoutShell({ children }) {
         <div className="border-t-[3px] border-black">
           <div className="max-w-7xl mx-auto px-4 sm:px-8 py-5 flex items-center justify-between mono-chip text-[13px] uppercase">
             <span>© 2026 Zulfa Sulthany</span>
-            <span>Built with Next.js</span>
+            <span>Open to discuss</span>
           </div>
         </div>
       </footer>
