@@ -1,31 +1,85 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import Script from "next/script";
 
 const SITE_KEY = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
+
+const TOAST_STYLE = {
+  success: { tab: "bg-[#88d498]", label: "Sent" },
+  error: { tab: "bg-[#ff6b6b]", label: "Error" },
+  loading: { tab: "bg-[#ffd23f]", label: "Sending" },
+};
+
+function Toast({ toast, onClose }) {
+  if (!toast) return null;
+  const style = TOAST_STYLE[toast.type];
+  return (
+    <motion.div
+      role="status"
+      aria-live="polite"
+      initial={{ opacity: 0, y: -24, x: "-50%" }}
+      animate={{ opacity: 1, y: 0, x: "-50%" }}
+      exit={{ opacity: 0, y: -24, x: "-50%" }}
+      transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+      className="fixed top-20 sm:top-24 left-1/2 z-[70] w-[calc(100%-2rem)] max-w-md bg-white border-[3px] border-black shadow-[5px_5px_0_0_#000]"
+    >
+      <div className="flex items-stretch">
+        <span className={`flex items-center px-3 font-display text-sm uppercase border-r-[3px] border-black ${style.tab}`} aria-hidden="true">
+          {style.label}
+        </span>
+        <p className="flex-1 px-4 py-3 font-bold text-[15px] leading-snug">{toast.text}</p>
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="Dismiss notification"
+          className="px-3 font-display text-lg border-l-[3px] border-black hover:bg-black hover:text-white transition-colors min-w-[48px]"
+        >
+          ×
+        </button>
+      </div>
+    </motion.div>
+  );
+}
 
 export default function ContactSection() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [captchaToken, setCaptchaToken] = useState("");
-  const [status, setStatus] = useState({ type: "idle", text: "" });
+  const [toast, setToast] = useState(null);
+  const [sending, setSending] = useState(false);
   const [recaptchaLoaded, setRecaptchaLoaded] = useState(false);
   const recaptchaRef = useRef(null);
   const widgetIdRef = useRef(null);
+  const dismissTimer = useRef(null);
   const reduce = useReducedMotion();
+
+  const showToast = (type, text, sticky = false) => {
+    if (dismissTimer.current) clearTimeout(dismissTimer.current);
+    setToast({ type, text });
+    if (!sticky) {
+      dismissTimer.current = setTimeout(() => setToast(null), 6000);
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      if (dismissTimer.current) clearTimeout(dismissTimer.current);
+    };
+  }, []);
 
   const renderWidget = () => {
     if (
       typeof window === "undefined" ||
       !window.grecaptcha ||
+      typeof window.grecaptcha.render !== "function" ||
       !recaptchaRef.current ||
       widgetIdRef.current !== null ||
       !SITE_KEY
     ) {
-      return;
+      return false;
     }
     try {
       widgetIdRef.current = window.grecaptcha.render(recaptchaRef.current, {
@@ -35,8 +89,30 @@ export default function ContactSection() {
         "expired-callback": () => setCaptchaToken(""),
         "error-callback": () => setCaptchaToken(""),
       });
+      return true;
     } catch {
       widgetIdRef.current = null;
+      return false;
+    }
+  };
+
+  // The script `onLoad` event can fire before the grecaptcha API is ready,
+  // which silently drops the first render. Poll until it succeeds.
+  const waitAndRender = (attempts = 25) => {
+    if (renderWidget()) return;
+    if (attempts <= 0) return;
+    setTimeout(() => waitAndRender(attempts - 1), 300);
+  };
+
+  const kickoffRecaptcha = () => {
+    setRecaptchaLoaded(true);
+    const grecaptcha = typeof window !== "undefined" ? window.grecaptcha : null;
+    if (grecaptcha && typeof grecaptcha.ready === "function") {
+      grecaptcha.ready(() => {
+        if (!renderWidget()) waitAndRender();
+      });
+    } else {
+      waitAndRender();
     }
   };
 
@@ -53,18 +129,19 @@ export default function ContactSection() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (status.type === "loading") return;
+    if (sending) return;
 
     if (!name.trim() || !email.trim() || !message.trim()) {
-      setStatus({ type: "error", text: "Please fill in name, email, and message." });
+      showToast("error", "Please fill in name, email, and message.");
       return;
     }
     if (!captchaToken) {
-      setStatus({ type: "error", text: "Please complete the captcha verification." });
+      showToast("error", "Please complete the captcha verification.");
       return;
     }
 
-    setStatus({ type: "loading", text: "Sending..." });
+    setSending(true);
+    showToast("loading", "Sending your message...", true);
     try {
       const res = await fetch("/api/send-email", {
         method: "POST",
@@ -75,14 +152,16 @@ export default function ContactSection() {
       if (!res.ok || !data.success) {
         throw new Error(data.error || "Failed to send message.");
       }
-      setStatus({ type: "success", text: "Message sent. I will reply soon." });
+      showToast("success", "Message sent. I will reply soon.");
       setName("");
       setEmail("");
       setMessage("");
       resetWidget();
     } catch (err) {
       resetWidget();
-      setStatus({ type: "error", text: err.message });
+      showToast("error", err.message);
+    } finally {
+      setSending(false);
     }
   };
 
@@ -97,11 +176,11 @@ export default function ContactSection() {
       <Script
         src="https://www.google.com/recaptcha/api.js?render=explicit"
         strategy="lazyOnload"
-        onLoad={() => {
-          setRecaptchaLoaded(true);
-          renderWidget();
-        }}
+        onLoad={kickoffRecaptcha}
       />
+      <AnimatePresence>
+        <Toast key="toast" toast={toast} onClose={() => setToast(null)} />
+      </AnimatePresence>
       <div className="mx-auto max-w-3xl">
         <p className="inline-block nb-chip bg-[#74b9ff] px-3 py-1.5 mono-chip text-[13px] uppercase">
           Contact
@@ -181,27 +260,12 @@ export default function ContactSection() {
             )}
           </div>
 
-          {status.text && (
-            <p
-              role="status"
-              className={`font-bold ${
-                status.type === "success"
-                  ? "text-green-800"
-                  : status.type === "error"
-                    ? "text-[#b00020]"
-                    : "text-black"
-              }`}
-            >
-              {status.text}
-            </p>
-          )}
-
           <button
             type="submit"
-            disabled={status.type === "loading"}
+            disabled={sending}
             className="nb-btn nb-btn-yellow w-full min-h-[56px] px-4 text-base uppercase tracking-wide disabled:opacity-60"
           >
-            {status.type === "loading" ? "Sending..." : "Send message"}
+            {sending ? "Sending..." : "Send message"}
           </button>
         </form>
       </div>
