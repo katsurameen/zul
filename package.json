@@ -13,8 +13,7 @@
     "framer-motion": "^12.18.1",
     "next": "15.3.8",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "smtpexpress": "^0.0.15"
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
