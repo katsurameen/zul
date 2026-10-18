@@ -39,7 +39,7 @@ export default function WorkSection() {
           Work experience
         </p>
         <h2 className="mt-5 font-display text-4xl md:text-6xl uppercase tracking-tight text-balance">
-          Six roles, one craft.
+          Where I have worked.
         </h2>
         <p className="mt-4 max-w-[60ch] text-lg leading-relaxed">
           From mobile apps to backend systems, across industry teams and campus labs.

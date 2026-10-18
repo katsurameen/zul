@@ -1,5 +1,5 @@
 "use client"
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import ProjectSection from './components/ProjectSection';
 import WorkSection from './components/WorkSection';
 import ProfileSection from './components/ProfileSection';
@@ -12,19 +12,18 @@ import useActiveSection from '@/hooks/useActiveSection';
 
 export default function HomePage() {
   const scrollRef = useRef(null);
-  const activeSection = useActiveSection(
-    [
-      "profile",
-      "work",
-      "projects",
-      "contact",
-    ],
-    scrollRef
+  const sectionIds = useMemo(
+    () => ["profile", "work", "projects", "contact"],
+    []
   );
+  const activeSection = useActiveSection(sectionIds, scrollRef);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
-    document.getElementById("profile")?.scrollIntoView({ behavior: "auto" });
+    // Reset to the top on a fresh load, but respect deep links (#projects etc.).
+    if (!window.location.hash) {
+      window.scrollTo({ top: 0 });
+    }
   }, []);
 
   return (

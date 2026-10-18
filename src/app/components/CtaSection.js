@@ -43,7 +43,7 @@ export default function CtaSection() {
           onClick={scrollToContact}
           className="nb-btn nb-btn-yellow mt-8 min-h-[56px] px-10 text-base uppercase tracking-wide"
         >
-          Get in touch
+          Send me a message
         </a>
       </motion.div>
     </div>

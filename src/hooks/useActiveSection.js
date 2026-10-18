@@ -35,7 +35,7 @@ export default function useActiveSection(sectionIds, rootRef) {
     });
 
     return () => observer.disconnect();
-  }, [sectionIds]);
+  }, [sectionIds, rootRef]);
 
   return activeSection;
 }

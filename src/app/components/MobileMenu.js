@@ -1,17 +1,61 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 const items = ["Profile", "Work", "Projects", "Contact"];
 
+const FOCUSABLE =
+  'a[href], button:not([disabled]), input, textarea, select, [tabindex]:not([tabindex="-1"])';
+
 export default function MobileMenu({ isOpen, onClose, activeSection }) {
+  const panelRef = useRef(null);
+  const closeButtonRef = useRef(null);
+  const restoreFocusRef = useRef(null);
+
   useEffect(() => {
     if (!isOpen) return;
-    const onKey = (e) => {
-      if (e.key === "Escape") onClose();
+
+    // Remember what had focus so it can be restored when the menu closes.
+    restoreFocusRef.current = document.activeElement;
+    // Move focus into the dialog.
+    closeButtonRef.current?.focus();
+
+    const getFocusable = () => {
+      const panel = panelRef.current;
+      if (!panel) return [];
+      return Array.from(panel.querySelectorAll(FOCUSABLE)).filter(
+        (el) => el.offsetParent !== null
+      );
     };
+
+    const onKey = (e) => {
+      if (e.key === "Escape") {
+        onClose();
+        return;
+      }
+      if (e.key !== "Tab") return;
+      // Keep keyboard focus cycling inside the open dialog.
+      const focusable = getFocusable();
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      const restore = restoreFocusRef.current;
+      if (restore && typeof restore.focus === "function") {
+        restore.focus();
+      }
+    };
   }, [isOpen, onClose]);
 
   const goTo = (e, id) => {
@@ -23,6 +67,7 @@ export default function MobileMenu({ isOpen, onClose, activeSection }) {
 
   return (
     <div
+      ref={panelRef}
       role="dialog"
       aria-modal="true"
       aria-label="Site menu"
@@ -34,6 +79,7 @@ export default function MobileMenu({ isOpen, onClose, activeSection }) {
       <div className="shrink-0 flex justify-between items-center px-4 h-16 border-b-[3px] border-black">
         <span className="font-display text-lg uppercase">Menu</span>
         <button
+          ref={closeButtonRef}
           aria-label="Close menu"
           onClick={onClose}
           tabIndex={isOpen ? 0 : -1}
@@ -68,7 +114,7 @@ export default function MobileMenu({ isOpen, onClose, activeSection }) {
 
       <div className="px-4 mt-2">
         <a
-          href="/Files/CV Zulfa.pdf"
+          href="/Files/Curriculum Vitae - Zulfa.pdf"
           download
           onClick={onClose}
           tabIndex={isOpen ? 0 : -1}

@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
 
 const skills = ["Python", "Next.js", "Flutter", "React Native", "Machine Learning", "REST APIs", "PostgreSQL", "Docker"];
@@ -51,7 +52,7 @@ export default function ProfileSection() {
                 Get in touch
               </a>
               <a
-                href="/Files/CV Zulfa.pdf"
+                href="/Files/Curriculum Vitae - Zulfa.pdf"
                 download
                 className="nb-btn nb-btn-white min-h-[52px] sm:min-h-[56px] px-2 sm:px-8 text-sm sm:text-base uppercase tracking-wide whitespace-nowrap"
               >
@@ -66,11 +67,16 @@ export default function ProfileSection() {
             transition={{ duration: 0.6, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
             className="relative"
           >
-            <img
-              src="/Images/zul.jpg"
-              alt="Zulfa Sulthany outdoors with mountains behind"
-              className="w-full h-80 sm:h-[480px] object-cover border-[3px] border-black shadow-[8px_8px_0_0_#000] rotate-1"
-            />
+            <div className="relative w-full h-80 sm:h-[480px] border-[3px] border-black shadow-[8px_8px_0_0_#000] rotate-1 overflow-hidden">
+              <Image
+                src="/Images/zulfa.png"
+                alt="Zulfa Sulthany outdoors with mountains behind"
+                fill
+                priority
+                sizes="(min-width: 1024px) 50vw, 100vw"
+                className="object-cover"
+              />
+            </div>
             <p className="absolute -top-5 right-4 nb-chip bg-[#ff90e8] px-3 py-1.5 text-sm uppercase rotate-3">
               Open to work
             </p>

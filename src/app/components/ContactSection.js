@@ -48,12 +48,14 @@ export default function ContactSection() {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [captchaToken, setCaptchaToken] = useState("");
+  const [errors, setErrors] = useState({});
   const [toast, setToast] = useState(null);
   const [sending, setSending] = useState(false);
   const [recaptchaLoaded, setRecaptchaLoaded] = useState(false);
   const recaptchaRef = useRef(null);
   const widgetIdRef = useRef(null);
   const dismissTimer = useRef(null);
+  const pollTimer = useRef(null);
   const reduce = useReducedMotion();
 
   const showToast = (type, text, sticky = false) => {
@@ -67,6 +69,7 @@ export default function ContactSection() {
   useEffect(() => {
     return () => {
       if (dismissTimer.current) clearTimeout(dismissTimer.current);
+      if (pollTimer.current) clearTimeout(pollTimer.current);
     };
   }, []);
 
@@ -85,7 +88,10 @@ export default function ContactSection() {
       widgetIdRef.current = window.grecaptcha.render(recaptchaRef.current, {
         sitekey: SITE_KEY,
         theme: "light",
-        callback: (token) => setCaptchaToken(token),
+        callback: (token) => {
+          setCaptchaToken(token);
+          setErrors((p) => ({ ...p, captcha: undefined }));
+        },
         "expired-callback": () => setCaptchaToken(""),
         "error-callback": () => setCaptchaToken(""),
       });
@@ -101,7 +107,7 @@ export default function ContactSection() {
   const waitAndRender = (attempts = 25) => {
     if (renderWidget()) return;
     if (attempts <= 0) return;
-    setTimeout(() => waitAndRender(attempts - 1), 300);
+    pollTimer.current = setTimeout(() => waitAndRender(attempts - 1), 300);
   };
 
   const kickoffRecaptcha = () => {
@@ -127,16 +133,25 @@ export default function ContactSection() {
     setCaptchaToken("");
   };
 
+  const validate = () => {
+    const next = {};
+    if (!name.trim()) next.name = "Name is required.";
+    if (!email.trim()) next.email = "Email is required.";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim()))
+      next.email = "Enter a valid email address.";
+    if (!message.trim()) next.message = "Message is required.";
+    if (!captchaToken)
+      next.captcha = "Please complete the captcha verification.";
+    setErrors(next);
+    return Object.keys(next).length === 0;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (sending) return;
 
-    if (!name.trim() || !email.trim() || !message.trim()) {
-      showToast("error", "Please fill in name, email, and message.");
-      return;
-    }
-    if (!captchaToken) {
-      showToast("error", "Please complete the captcha verification.");
+    if (!validate()) {
+      showToast("error", "Please fix the highlighted fields.");
       return;
     }
 
@@ -156,6 +171,7 @@ export default function ContactSection() {
       setName("");
       setEmail("");
       setMessage("");
+      setErrors({});
       resetWidget();
     } catch (err) {
       resetWidget();
@@ -200,12 +216,23 @@ export default function ContactSection() {
             <textarea
               id="message"
               value={message}
-              onChange={(e) => setMessage(e.target.value)}
+              onChange={(e) => {
+                setMessage(e.target.value);
+                if (errors.message)
+                  setErrors((p) => ({ ...p, message: undefined }));
+              }}
               placeholder="Write your message here..."
               required
               rows={5}
+              aria-invalid={errors.message ? "true" : undefined}
+              aria-describedby={errors.message ? "message-error" : undefined}
               className="nb-input resize-y leading-relaxed"
             />
+            {errors.message && (
+              <p id="message-error" className="mt-2 font-bold text-sm text-[#b00020]">
+                {errors.message}
+              </p>
+            )}
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -217,12 +244,22 @@ export default function ContactSection() {
                 id="name"
                 type="text"
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={(e) => {
+                  setName(e.target.value);
+                  if (errors.name) setErrors((p) => ({ ...p, name: undefined }));
+                }}
                 required
                 autoComplete="name"
+                aria-invalid={errors.name ? "true" : undefined}
+                aria-describedby={errors.name ? "name-error" : undefined}
                 className="nb-input"
                 placeholder="Your name"
               />
+              {errors.name && (
+                <p id="name-error" className="mt-2 font-bold text-sm text-[#b00020]">
+                  {errors.name}
+                </p>
+              )}
             </div>
             <div>
               <label htmlFor="email" className="block mb-2 font-bold uppercase text-sm tracking-wide">
@@ -232,12 +269,22 @@ export default function ContactSection() {
                 id="email"
                 type="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  if (errors.email) setErrors((p) => ({ ...p, email: undefined }));
+                }}
                 required
                 autoComplete="email"
+                aria-invalid={errors.email ? "true" : undefined}
+                aria-describedby={errors.email ? "email-error" : undefined}
                 className="nb-input"
                 placeholder="you@mail.com"
               />
+              {errors.email && (
+                <p id="email-error" className="mt-2 font-bold text-sm text-[#b00020]">
+                  {errors.email}
+                </p>
+              )}
             </div>
           </div>
 
@@ -247,6 +294,11 @@ export default function ContactSection() {
             ) : (
               <p className="font-bold text-[#b00020]">
                 Missing NEXT_PUBLIC_RECAPTCHA_SITE_KEY in .env.local
+              </p>
+            )}
+            {errors.captcha && (
+              <p className="mt-2 font-bold text-sm text-[#b00020]">
+                {errors.captcha}
               </p>
             )}
             {recaptchaLoaded && widgetIdRef.current === null && SITE_KEY && (

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 
 
@@ -62,12 +63,13 @@ function ExpandableCard({ project, index }) {
       aria-expanded={open}
       className="nb-card nb-card-hover group cursor-pointer overflow-hidden"
     >
-      <div className="overflow-hidden border-b-[3px] border-black">
-        <img
+      <div className="relative h-52 overflow-hidden border-b-[3px] border-black">
+        <Image
           src={project.image}
           alt={project.title}
-          loading="lazy"
-          className="w-full h-52 object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+          fill
+          sizes="(min-width: 640px) 50vw, 100vw"
+          className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
         />
       </div>
       <div className="p-5 sm:p-6">
@@ -117,7 +119,7 @@ export default function ProjectSection() {
         Selected projects.
       </h2>
       <p className="mt-4 max-w-[60ch] text-lg leading-relaxed">
-        Real products shipped across web, mobile, and machine learning. Click a card to expand details.
+        Products shipped across web, mobile, and machine learning. Click a card to expand details.
       </p>
       <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
         {projects.map((project, i) => (

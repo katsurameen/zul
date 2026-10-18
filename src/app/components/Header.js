@@ -45,7 +45,7 @@ export default function Header({ activeSection, onMenuOpen, isMenuOpen }) {
 
         <div className="flex items-center gap-2">
           <a
-            href="/Files/CV Zulfa.pdf"
+            href="/Files/Curriculum Vitae - Zulfa.pdf"
             download
             className="nb-btn nb-btn-yellow hidden sm:inline-flex min-h-[44px] px-5 text-sm uppercase tracking-wide"
           >

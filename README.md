@@ -1,36 +1,65 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Zulfa Sulthany — Portfolio
 
-## Getting Started
+Personal portfolio site for Zulfa Sulthany, a backend developer based in Bandung.
+Built with Next.js (App Router, JavaScript), Tailwind CSS v4, and Framer Motion,
+with a contact form that sends via Brevo and is protected by Google reCAPTCHA.
 
-First, run the development server:
+## Getting started
 
 ```bash
+npm install
+cp .env.example .env.local   # fill in the values below
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## Environment variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Create `.env.local` (never commit it) with:
 
-## Learn More
+| Variable | Required | Purpose |
+| --- | --- | --- |
+| `NEXT_PUBLIC_SITE_URL` | Production | Canonical origin, e.g. `https://zulfasulthany.com`. Used for canonical/OG/sitemap URLs. |
+| `NEXT_PUBLIC_RECAPTCHA_SITE_KEY` | Yes | reCAPTCHA v2 site key (public). |
+| `RECAPTCHA_SECRET_KEY` | Yes | reCAPTCHA v2 secret key (server only). |
+| `BREVO_API_KEY` | Yes | Brevo API key for sending mail. |
+| `BREVO_SENDER_EMAIL` | Yes | Verified sender address in Brevo. |
+| `BREVO_SENDER_NAME` | No | Display name for the sender. |
+| `BREVO_RECIPIENT` | Yes | Where contact messages are delivered. |
+| `SMTPXPRESS_RECIPIENT` | No | Fallback recipient if `BREVO_RECIPIENT` is unset. |
 
-To learn more about Next.js, take a look at the following resources:
+Without `NEXT_PUBLIC_SITE_URL`, the site falls back to a placeholder origin, so
+set it before deploying.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Scripts
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `npm run dev` — dev server (Turbopack: `npm run dev:turbo`).
+- `npm run build` — production build.
+- `npm run start` — serve the production build.
+- `npm run lint` — ESLint.
 
-## Deploy on Vercel
+## Project layout
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+src/
+  app/
+    layout.js              root layout: fonts, global metadata, JSON-LD
+    page.js                home page, section composition
+    globals.css            Tailwind v4 entry + brutalist design tokens
+    opengraph-image.js     generated 1200x630 social share image
+    robots.js, sitemap.js, manifest.js   SEO / PWA metadata routes
+    api/send-email/route.js  contact form handler (reCAPTCHA + Brevo)
+    components/            Header, sections, mobile menu, section dots
+  hooks/useActiveSection.js  scroll-spy via IntersectionObserver
+  lib/site.js              site metadata + Person JSON-LD
+public/
+  Files/                   downloadable CV
+  Images/                  project + profile images
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Notes
+
+- The hero photo at `public/Images/zul.jpg` is 300x250 and is rendered larger
+  than its native size, so it looks soft. Replace it with a higher-resolution
+  portrait (roughly 1200px wide) for a sharp result.
