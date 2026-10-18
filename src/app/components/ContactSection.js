@@ -52,7 +52,9 @@ export default function ContactSection() {
   const [toast, setToast] = useState(null);
   const [sending, setSending] = useState(false);
   const [recaptchaLoaded, setRecaptchaLoaded] = useState(false);
+  const [needsRecaptcha, setNeedsRecaptcha] = useState(false);
   const recaptchaRef = useRef(null);
+  const sectionRef = useRef(null);
   const widgetIdRef = useRef(null);
   const dismissTimer = useRef(null);
   const pollTimer = useRef(null);
@@ -72,6 +74,29 @@ export default function ContactSection() {
       if (pollTimer.current) clearTimeout(pollTimer.current);
     };
   }, []);
+
+  // reCAPTCHA is ~176 KiB of JS and blocks the main thread. Only load it once
+  // the contact section is close to the viewport (or the user focuses a field),
+  // so it never counts against the initial page load.
+  useEffect(() => {
+    if (!SITE_KEY || needsRecaptcha) return;
+    const el = sectionRef.current;
+    if (!el || typeof IntersectionObserver === "undefined") {
+      setNeedsRecaptcha(true);
+      return;
+    }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          setNeedsRecaptcha(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "300px 0px" }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [needsRecaptcha]);
 
   const renderWidget = () => {
     if (
@@ -183,17 +208,20 @@ export default function ContactSection() {
 
   return (
     <motion.div
+      ref={sectionRef}
       initial={reduce ? false : { opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.2 }}
       transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
       className="max-w-7xl mx-auto px-4 sm:px-8 py-16 sm:py-24"
     >
-      <Script
-        src="https://www.google.com/recaptcha/api.js?render=explicit"
-        strategy="lazyOnload"
-        onLoad={kickoffRecaptcha}
-      />
+      {needsRecaptcha && (
+        <Script
+          src="https://www.google.com/recaptcha/api.js?render=explicit"
+          strategy="lazyOnload"
+          onLoad={kickoffRecaptcha}
+        />
+      )}
       <AnimatePresence>
         <Toast key="toast" toast={toast} onClose={() => setToast(null)} />
       </AnimatePresence>
@@ -208,7 +236,7 @@ export default function ContactSection() {
           Have a project in mind or just want to say hi? Fill in the form below.
         </p>
 
-        <form onSubmit={handleSubmit} className="mt-10 nb-card p-6 sm:p-8 space-y-6">
+        <form onSubmit={handleSubmit} onFocus={() => setNeedsRecaptcha(true)} className="mt-10 nb-card p-6 sm:p-8 space-y-6">
           <div>
             <label htmlFor="message" className="block mb-2 font-bold uppercase text-sm tracking-wide">
               Message

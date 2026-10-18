@@ -21,7 +21,7 @@ const columns = [
   },
   {
     title: "Files",
-    links: [{ name: "Download CV", href: "/Files/CV Zulfa.pdf" }],
+    links: [{ name: "Download CV", href: "/Files/Curriculum Vitae - Zulfa.pdf" }],
   },
 ];
 

@@ -25,11 +25,7 @@ export default function ProfileSection() {
         <div aria-hidden="true" className="nb-dots absolute inset-0 opacity-[0.08] pointer-events-none" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-8 pt-12 sm:pt-20 pb-14">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-center">
-          <motion.div
-            initial={reduce ? false : { opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          >
+          <div data-anim="hero" className="motion-safe:animate-[heroIn_.5s_cubic-bezier(.16,1,.3,1)_both]">
             <p className="inline-block nb-chip bg-white px-3 py-1.5 mono-chip text-[13px] uppercase -rotate-2">
               Junior Backend Developer
             </p>
@@ -59,7 +55,7 @@ export default function ProfileSection() {
                 Download CV
               </a>
             </div>
-          </motion.div>
+          </div>
 
           <motion.div
             initial={reduce ? false : { opacity: 0, y: 32 }}
@@ -67,16 +63,15 @@ export default function ProfileSection() {
             transition={{ duration: 0.6, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
             className="relative"
           >
-            <div className="relative w-full h-80 sm:h-[480px] border-[3px] border-black shadow-[8px_8px_0_0_#000] rotate-1 overflow-hidden">
-              <Image
-                src="/Images/zulfa.png"
-                alt="Zulfa Sulthany outdoors with mountains behind"
-                fill
-                priority
-                sizes="(min-width: 1024px) 50vw, 100vw"
-                className="object-cover"
-              />
-            </div>
+            <Image
+              src="/Images/zulfa.png"
+              alt="Zulfa Sulthany outdoors with mountains behind"
+              width={817}
+              height={801}
+              priority
+              sizes="(min-width: 1024px) 50vw, 100vw"
+              className="w-full h-auto border-[3px] border-black shadow-[8px_8px_0_0_#000] rotate-1"
+            />
             <p className="absolute -top-5 right-4 nb-chip bg-[#ff90e8] px-3 py-1.5 text-sm uppercase rotate-3">
               Open to work
             </p>

@@ -16,8 +16,8 @@ export default function Header({ activeSection, onMenuOpen, isMenuOpen }) {
         <a
           href="#profile"
           onClick={(e) => scrollTo(e, "profile")}
-          className="flex items-center gap-3"
-          aria-label="Back to top"
+          className="flex items-center gap-3 min-h-[44px]"
+          aria-label="Zulfa Sulthany, back to top"
         >
           <span className="flex items-center justify-center w-9 h-9 bg-[#ffd23f] border-[3px] border-black shadow-[3px_3px_0_0_#000] font-display text-lg" aria-hidden="true">
             Z
@@ -32,7 +32,7 @@ export default function Header({ activeSection, onMenuOpen, isMenuOpen }) {
               href={`#${id}`}
               aria-current={activeSection === id ? "true" : undefined}
               onClick={(e) => scrollTo(e, id)}
-              className={`px-4 py-2 font-bold uppercase text-sm tracking-wide border-[3px] transition-all ${
+              className={`inline-flex items-center min-h-[44px] px-4 py-2 font-bold uppercase text-sm tracking-wide border-[3px] transition-all ${
                 activeSection === id
                   ? "bg-[#ffd23f] border-black shadow-[3px_3px_0_0_#000]"
                   : "border-transparent hover:border-black hover:bg-white"

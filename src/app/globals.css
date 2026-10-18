@@ -38,6 +38,17 @@ body {
   font-family: var(--font-archivo), system-ui, sans-serif;
 }
 
+/* Hero text entrance: CSS-only (no JS wait), transform only so the text
+   paints immediately and does not delay Largest Contentful Paint. */
+@keyframes heroIn {
+  from {
+    transform: translateY(24px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
 .mono-chip {
   font-family: var(--font-spacemono), ui-monospace, monospace;
 }

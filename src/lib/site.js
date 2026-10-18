@@ -1,6 +1,6 @@
 // Single source of truth for site-level SEO metadata.
 // Set NEXT_PUBLIC_SITE_URL in your environment to the real production origin
-// (e.g. https://zulfasulthany.com) so canonical, OG and sitemap URLs resolve.
+// (e.g. https://www.zumawahib.xyz) so canonical, OG and sitemap URLs resolve.
 export const siteUrl = (
   process.env.NEXT_PUBLIC_SITE_URL || "https://www.zumawahib.xyz"
 ).replace(/\/$/, "");
@@ -25,7 +25,7 @@ export function personJsonLd() {
     "@type": "Person",
     name: siteName,
     url: siteUrl,
-    image: `${siteUrl}/Images/zul.jpg`,
+    image: `${siteUrl}/Images/zulfa.png`,
     jobTitle: "Backend Developer",
     description: siteDescription,
     address: {

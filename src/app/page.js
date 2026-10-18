@@ -1,14 +1,18 @@
 "use client"
 import { useEffect, useMemo, useRef, useState } from 'react';
-import ProjectSection from './components/ProjectSection';
-import WorkSection from './components/WorkSection';
+import dynamic from 'next/dynamic';
 import ProfileSection from './components/ProfileSection';
-import ContactSection from './components/ContactSection';
-import CtaSection from './components/CtaSection';
 import Header from './components/Header';
 import MobileMenu from './components/MobileMenu';
 import SectionDots from './components/SectionDots';
 import useActiveSection from '@/hooks/useActiveSection';
+
+// Below-the-fold sections are code-split so their JS does not sit in the
+// initial bundle. They are still server-rendered, so there is no layout shift.
+const WorkSection = dynamic(() => import('./components/WorkSection'));
+const ProjectSection = dynamic(() => import('./components/ProjectSection'));
+const CtaSection = dynamic(() => import('./components/CtaSection'));
+const ContactSection = dynamic(() => import('./components/ContactSection'));
 
 export default function HomePage() {
   const scrollRef = useRef(null);

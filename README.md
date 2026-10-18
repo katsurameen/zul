@@ -60,6 +60,7 @@ public/
 
 ## Notes
 
-- The hero photo at `public/Images/zul.jpg` is 300x250 and is rendered larger
-  than its native size, so it looks soft. Replace it with a higher-resolution
-  portrait (roughly 1200px wide) for a sharp result.
+- Profile photo is `public/Images/zulfa.png` (817x801). Next.js optimizes it on
+  request, but a source around 1200px wide keeps the 2x displays sharp.
+- Keep the CV at `public/Files/Curriculum Vitae - Zulfa.pdf`; the download links
+  in the header, mobile menu, hero, and footer point to that path.

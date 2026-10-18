@@ -10,6 +10,8 @@ const projects = [
     id: 1,
     title: "Palm Tree Health Detection",
     image: "/Images/project1.jpg",
+    width: 800,
+    height: 328,
     description: "Detecting palm tree health using Mask R-CNN and NDVI in aerial imagery.",
     tag: "ML / CV",
     pill: "bg-[#88d498]",
@@ -18,6 +20,8 @@ const projects = [
     id: 2,
     title: "ORLINK",
     image: "/Images/project2.jpg",
+    width: 800,
+    height: 320,
     description: "A website for subscribing to the internet in residential areas.",
     tag: "WEB",
     pill: "bg-[#74b9ff]",
@@ -26,6 +30,8 @@ const projects = [
     id: 3,
     title: "E-GEOS Mobile",
     image: "/Images/project3.jpg",
+    width: 800,
+    height: 320,
     description: "A mobile app for uploading and processing aerial data from the field.",
     tag: "MOBILE",
     pill: "bg-[#ff90e8]",
@@ -34,6 +40,8 @@ const projects = [
     id: 4,
     title: "Spicetify",
     image: "/Images/project4.jpg",
+    width: 800,
+    height: 320,
     description: "A website for gathering stats from your daily Spotify.",
     tag: "WEB",
     pill: "bg-[#ffd23f]",
@@ -63,13 +71,14 @@ function ExpandableCard({ project, index }) {
       aria-expanded={open}
       className="nb-card nb-card-hover group cursor-pointer overflow-hidden"
     >
-      <div className="relative h-52 overflow-hidden border-b-[3px] border-black">
+      <div className="overflow-hidden border-b-[3px] border-black">
         <Image
           src={project.image}
           alt={project.title}
-          fill
+          width={project.width}
+          height={project.height}
           sizes="(min-width: 640px) 50vw, 100vw"
-          className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+          className="w-full h-auto transition-transform duration-500 ease-out group-hover:scale-105"
         />
       </div>
       <div className="p-5 sm:p-6">
