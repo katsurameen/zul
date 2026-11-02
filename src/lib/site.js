@@ -1,8 +1,8 @@
 // Single source of truth for site-level SEO metadata.
 // Set NEXT_PUBLIC_SITE_URL in your environment to the real production origin
-// (e.g. https://www.zumawahib.xyz) so canonical, OG and sitemap URLs resolve.
+// (e.g. https://www.zumawahib.my.id) so canonical, OG and sitemap URLs resolve.
 export const siteUrl = (
-  process.env.NEXT_PUBLIC_SITE_URL || "https://www.zumawahib.xyz"
+  process.env.NEXT_PUBLIC_SITE_URL || "https://www.zumawahib.my.id"
 ).replace(/\/$/, "");
 
 export const siteName = "Zulfa Sulthany";
